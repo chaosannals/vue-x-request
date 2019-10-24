@@ -1,5 +1,5 @@
 {
-  "name": "vue-x-requests",
+  "name": "vue-x-request",
   "version": "0.1.0",
   "main": "source/plugin.js",
   "scripts": {
