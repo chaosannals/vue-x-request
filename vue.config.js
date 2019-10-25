@@ -10,4 +10,18 @@ module.exports = {
             },
         },
     },
+    devServer: {
+        setup: app => {
+            app.get('/some/get', (req, res) => {
+                res.json({
+                    custom: 'response get'
+                });
+            });
+            app.post('/some/post', (req, res) => {
+                res.json({
+                    custom: 'response post'
+                });
+            })
+        }
+    }
 };
