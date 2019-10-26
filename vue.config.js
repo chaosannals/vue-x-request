@@ -21,7 +21,14 @@ module.exports = {
                 res.json({
                     custom: 'response post'
                 });
-            })
+            });
+            app.get('/some/jsonp', (req, res) => {
+                let result = JSON.stringify({
+                    custom: 'response jsonp'
+                });
+                let callback = req.query.callback || 'callback';
+                res.end(`${callback}(${result});`);
+            });
         }
     }
 };

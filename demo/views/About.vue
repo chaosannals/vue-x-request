@@ -2,6 +2,7 @@
   <div class="about">
     <h1>{{textByGet}}</h1>
     <h1>{{textByPost}}</h1>
+    <h1>{{textByJsonp}}</h1>
   </div>
 </template>
 
@@ -10,7 +11,8 @@ export default {
   data() {
     return {
       textByGet: "",
-      textByPost: ""
+      textByPost: "",
+      textByJsonp: "",
     };
   },
   created() {
@@ -19,6 +21,9 @@ export default {
     });
     this.$ajax.post("/some/post").then(response => {
       this.textByPost = response.data.custom;
+    });
+    this.$jsonp.request('/some/jsonp').then(data => {
+      this.textByJsonp = data.custom;
     });
   }
 };
