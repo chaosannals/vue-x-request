@@ -28,11 +28,11 @@ export default class JsonpRequester {
                 delete window[param.callback];
             };
             element.onload = () => {
-                element.remove();
+                document.body.removeChild(element);
             };
             element.onerror = e => {
                 reject(e);
-                element.remove();
+                document.body.removeChild(element);
             }
             document.body.appendChild(element);
         });
