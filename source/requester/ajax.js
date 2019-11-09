@@ -1,4 +1,6 @@
 import axios from 'axios';
+import qs from 'qs';
+import lodash from 'lodash';
 
 /**
  * ajax 封装
@@ -19,7 +21,22 @@ export default class AjaxRequester {
      * @param {*} url 
      * @param {*} config 
      */
-    get(url, config) {
+    get(url, query, config) {
+        let path = url;
+        let matches = url.match(/(.+?)(?:\?)(.+)/);
+        if (lodash.isNil(query)) {
+            query = {};
+        }
+        if (!lodash.isNull(matches)) {
+            path = matches[1];
+            query = {
+                ...qs.parse(matches[2]),
+                ...query,
+            };
+        }
+        if (!lodash.isEmpty(query)) {
+            url = path + '?' + qs.stringify(query);
+        }
         return this.axios.get(url, config);
     }
 

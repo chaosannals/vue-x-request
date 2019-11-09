@@ -12,19 +12,39 @@ export default {
     return {
       textByGet: "",
       textByPost: "",
-      textByJsonp: "",
+      textByJsonp: ""
     };
   },
   created() {
-    this.$ajax.get("/some/get").then(response => {
-      this.textByGet = response.data.custom;
-    });
-    this.$ajax.post("/some/post").then(response => {
-      this.textByPost = response.data.custom;
-    });
-    this.$jsonp.request('/some/jsonp').then(data => {
-      this.textByJsonp = data.custom;
-    });
+    // Get 请求。
+    this.$ajax
+      .get("/some/get?a=1", {
+        b: 2,
+        c: 3
+      })
+      .then(response => {
+        this.textByGet = response.data.custom;
+      });
+
+    // Post 请求。
+    this.$ajax
+      .post("/some/post?a=2", {
+        b: 2,
+        c: 3
+      })
+      .then(response => {
+        this.textByPost = response.data.custom;
+      });
+
+    // JsonP 请求。
+    this.$jsonp
+      .request("/some/jsonp?a=3", {
+        b: 2,
+        c: 3
+      })
+      .then(data => {
+        this.textByJsonp = data.custom;
+      });
   }
 };
 </script>
