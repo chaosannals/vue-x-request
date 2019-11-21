@@ -22,8 +22,12 @@ export default {
         b: 2,
         c: 3
       })
-      .then(response => {
+      .then(async response => {
         this.textByGet = response.data.custom;
+        await this.$ajax.get("/some/get?a=1", {
+          b: 2,
+          c: 3
+        });
       });
 
     // Post 请求。

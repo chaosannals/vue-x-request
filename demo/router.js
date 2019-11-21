@@ -10,6 +10,10 @@ const router = new VueRouter({
     path: '/',
     name: 'home',
     component: () => import('@/views/About.vue')
+  }, {
+    path: '/socket',
+    name: 'socket',
+    component: () => import('@/views/AboutSocket.vue')
   }]
 });
 
