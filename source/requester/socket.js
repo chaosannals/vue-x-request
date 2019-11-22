@@ -9,7 +9,7 @@ export default class Socket {
     /**
      * 初始化。
      * 
-     * @param {*}} retryMaxTimes 
+     * @param {*} retryMaxTimes 
      */
     constructor(retryMaxTimes) {
         this.messages = [];
@@ -25,13 +25,28 @@ export default class Socket {
      * @param {*} outtime 
      */
     connect(url, outtime) {
+        // 提供默认连接
         if (!url || lodash.isNumber(url)) {
             let pattern = /(https?):\/\/(.+?)(:\d+)?\/.*/;
-            let replacement = `ws://$2:${url || 21214}/`;
+            let replacement = `ws://$2${url ? ':' + url : '$3'}/`;
             url = window.location.href.replace(pattern, replacement);
         }
+
+        // 路径替代
+        if (url && !/^wss?:\/\/.*/.test(url)) {
+            let pattern = /(https?):\/\/(.+?)(:\d+)?\/.*/;
+            let replacement = `ws://$2$3/${url}`;
+            url = window.location.href.replace(pattern, replacement);
+        }
+
+        // 初始化并连接
+        window.console.log(url);
         this.handler = new WebSocket(url);
+        setInterval(() => {
+            window.console.log('state', this.handler.readyState);
+        }, 2000);
         let onOpen = () => {
+            window.console.log('open', url);
             for (let message of this.messages) {
                 this.handler.send(message);
             }
@@ -102,6 +117,7 @@ export default class Socket {
 }
 
 /**
+ * 请求器。
  * 
  */
 export class SocketRequester {
@@ -112,24 +128,43 @@ export class SocketRequester {
     /**
      * 连接
      * 
-     * @param {*} name 
      * @param {*} url 
      * @param {*} outtime 
      */
-    connect(name, url, outtime) {
+    connect(url, outtime) {
+        let id = uuidv4();
         let socket = new Socket;
-        this.all[name] = socket;
+        this.all[id] = socket;
         socket.connect(url, outtime);
+        return id;
     }
 
     /**
      * 发送。
      * 
-     * @param {*} name 
+     * @param {*} id 
      * @param {*} message 
      */
-    send(name, message) {
-        let socket = this.all[name];
+    send(id, message) {
+        let socket = this.all[id];
         return socket.send(message);
+    }
+
+    /**
+     * 关闭。
+     * 
+     */
+    close(id) {
+        if (id) {
+            let socket = this.all[id];
+            socket.close();
+            delete this.all[id];
+        } else {
+            for (let id in this.all) {
+                let socket = this.all[id];
+                socket.close();
+            }
+            this.all = {};
+        }
     }
 }

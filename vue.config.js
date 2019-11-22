@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const expressWs = require('express-ws');
 const log4js = require('log4js');
 log4js.configure({
     appenders: {
@@ -50,11 +51,19 @@ module.exports = {
         };
     },
     devServer: {
-        before: () => {
+        before: (app) => {
             logger.info('before port ============>');
+            app.ws('/some/sock', (ws) => {
+                logger.info('websock open: ==============>');
+                ws.send('连接成功');
+                ws.on('message', message => {
+                    logger.info(`websock message: ==============> ${message}`);
+                    ws.send(`接到了: ${message}`);
+                });
+            });
         },
         after: (app, server, compiler) => {
-            compiler.hooks.beforeCompile.tap('set-env', (/** compilation */) => {
+            compiler.hooks.beforeCompile.tap('set-env', ( /** compilation */ ) => {
                 let time = new Date().getTime();
                 logger.info('before compile(beforeCompile) =>>>>>>>>>>', time);
                 compiler.apply(new webpack.DefinePlugin({
@@ -68,6 +77,7 @@ module.exports = {
         },
         setup: app => {
             logger.info('on setup: ==============>');
+            expressWs(app);
             app.get('/some/get', (req, res) => {
                 res.json({
                     custom: 'response get'

@@ -10,10 +10,19 @@
 
 <script>
 export default {
+  data() {
+    return {
+      socket: null
+    }
+  },
   computed: {
     version() {
       return process.env.VERSION;
     }
+  },
+  created() {
+    this.socket = this.$socket.connect('some/sock');
+    this.$socket.send(this.socket, 'aaaa');
   }
 };
 </script>

@@ -1,5 +1,5 @@
 import qs from 'qs';
-import uuidv4 from 'uuid/v4';
+import uuidv1 from 'uuid/v1';
 
 /**
  * Jsonp 封装
@@ -16,7 +16,7 @@ export default class JsonpRequester {
             param = {};
         }
         if (!param.callback) {
-            let uuid = uuidv4().replace(/-/g, '');
+            let uuid = uuidv1().replace(/-/g, '');
             param.callback = `vueXRequestJsonp${uuid}`;
         }
         return new Promise((resolve, reject) => {
