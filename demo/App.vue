@@ -13,7 +13,7 @@ export default {
   data() {
     return {
       socket: null
-    }
+    };
   },
   computed: {
     version() {
@@ -21,8 +21,11 @@ export default {
     }
   },
   created() {
-    this.socket = this.$socket.connect('some/sock');
-    this.$socket.send(this.socket, 'aaaa');
+    this.$script.request("/one.js").then(() => {
+      this.$script.request("/two.js");
+    });
+    // this.socket = this.$socket.connect('some/sock');
+    // this.$socket.send(this.socket, 'aaaa');
   }
 };
 </script>

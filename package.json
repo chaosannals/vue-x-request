@@ -1,6 +1,6 @@
 {
   "name": "vue-x-request",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "main": "source/plugin.js",
   "scripts": {
     "serve": "vue-cli-service serve",
